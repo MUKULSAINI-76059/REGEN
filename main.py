@@ -3,6 +3,7 @@ import socket
 import numpy as np, pandas as pd, plotly
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from data_generator import *
@@ -20,6 +21,14 @@ EX = build_explainers(B)
 POLYS = district_polygons()
 R = lambda x: round(float(x), 2)
 app = FastAPI(title="REGEN-AI API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://regen-rncw9rtp1-mukulsaini76059-3689s-projects.vercel.app"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def day_frame(day):
