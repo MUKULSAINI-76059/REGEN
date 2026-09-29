@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+httpx
+pandas
+numpy
+scikit-learn
+xgboost
+lightgbm
+shap
+plotly
+scipy

@@ -1,0 +1,129 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>REGEN — Better monsoon rain forecasts</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="/plotly.min.js"></script>
+<style>
+:root{--b:#D7F0FF;--g:#DFF6EA;--o:#FFEED9;--r:#FFD7C8;--tx:#18384B;--mu:#5F7D8A;--ink:#0F2B39;--cloud:#BDE7F3;--teal:#7BC7C2;--sand:#F3C99B;--coral:#F39A7D}
+*{box-sizing:border-box}body{margin:0;font:14px Poppins,'Open Sans',sans-serif;color:var(--tx);background:linear-gradient(180deg,#edf8fd 0%,#f7fbfc 42%,#f5f1ea 100%)}
+a{color:inherit;text-decoration:none}
+.nav{background:linear-gradient(90deg,#dff7ff 0%,#d9f3ed 55%,#f9f4ea 100%);display:flex;align-items:center;gap:14px;padding:10px 20px;position:sticky;top:0;z-index:20;box-shadow:0 2px 12px rgba(24,56,75,.12)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:22px;white-space:nowrap;color:var(--ink);padding:4px 6px;border-radius:16px}
+.logo-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;overflow:hidden;box-shadow:0 10px 18px rgba(17,80,96,.18);background:#fff;border:2px solid rgba(13,85,104,.12)}
+.logo-mark img{width:100%;height:100%;object-fit:cover;display:block}
+.logo-text{display:flex;align-items:baseline;gap:4px;letter-spacing:.02em;line-height:1}
+.logo-text .brand-main{font-size:22px;font-weight:800;letter-spacing:.02em}
+.logo-text .brand-sub{font-size:18px;color:#688792;font-weight:700}
+.logo small{display:block;font-size:9px;font-weight:700;color:#47646d;margin-top:2px;letter-spacing:.12em;text-transform:uppercase}
+.search{flex:1;display:flex;border-radius:12px;overflow:hidden;background:rgba(255,255,255,.78);box-shadow:0 2px 10px rgba(24,56,75,.08);backdrop-filter:blur(4px)}
+.search input{flex:1;border:0;padding:11px 14px;font:inherit;outline:0;background:transparent}.search span{background:linear-gradient(135deg,var(--o),#f9d7a7);padding:11px 18px;font-size:16px}
+select,.chipb{font:inherit;border:0;border-radius:10px;padding:9px 12px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.sub{background:linear-gradient(90deg,#dff6ea 0%,#e7f8fb 100%);display:flex;gap:6px;padding:7px 20px;overflow:auto;white-space:nowrap}
+.sub a{padding:6px 14px;border-radius:999px;cursor:pointer;font-weight:500}.sub a:hover,.sub a.on{background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.wrap{max-width:1300px;margin:auto;padding:16px}
+.hero{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.banner{background:radial-gradient(circle at top left,#f0fbff 0%,#dff7f5 30%,#f4e7d0 100%);border-radius:22px;padding:34px;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;box-shadow:0 12px 28px rgba(42,85,97,.14);min-height:400px;border:1px solid rgba(103,146,161,.08)}
+.banner h1{font-size:34px;line-height:1.15;margin:0 0 10px;color:var(--ink)}.banner p{color:#45616d;margin:0 0 18px;font-size:15px}
+.btn{background:linear-gradient(135deg,#ffd8ab,#ffc77c);border:1px solid rgba(233,170,78,.8);border-radius:999px;padding:10px 22px;font:600 14px Poppins;cursor:pointer;box-shadow:0 6px 18px rgba(243,154,125,.25);transition:.2s}.btn:hover{background:linear-gradient(135deg,#ffc77c,#f7b35b);transform:translateY(-1px)}
+.mapbox{background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(198,233,244,.62)),url('logo/ChatGPT Image Sep 29, 2026, 11_42_58 PM.png') center/cover no-repeat;border-radius:18px;border:1px solid rgba(126,170,188,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.tiles{display:grid;gap:16px}.tile{background:#fff;border-radius:22px;padding:18px;box-shadow:0 6px 18px rgba(100,181,246,.16)}
+.tile h3{margin:0 0 8px;font-size:15px}.big{font-size:30px;font-weight:700}.mu{color:var(--mu);font-size:12px}
+h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;padding:4px 2px 14px}
+.main{display:grid;grid-template-columns:230px 1fr;gap:18px}
+.side{background:#fff;border-radius:18px;padding:16px;height:fit-content;position:sticky;top:110px;box-shadow:0 6px 18px rgba(100,181,246,.14)}
+.side h4{margin:14px 0 8px}.side label{display:block;margin:6px 0;cursor:pointer}.side input[type=range]{width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:16px}
+.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.07);cursor:pointer;transition:.25s;min-width:215px;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-5px);box-shadow:0 14px 28px rgba(100,181,246,.3)}
+.img{height:110px;display:grid;place-items:center;font-size:44px;position:relative}
+.badge{position:absolute;top:10px;left:10px;background:#fff;border-radius:999px;font-size:11px;padding:3px 10px;font-weight:600}
+.badge.up{background:#FFCC80}.cb{padding:12px 14px;display:flex;flex-direction:column;gap:5px;flex:1}
+.cb b.t{font-size:15px}.price{font-size:24px;font-weight:700}.price s{font-size:13px;color:var(--mu);font-weight:400;margin-left:6px}
+.stars{color:#FFB74D;letter-spacing:2px}.pill{display:inline-block;background:var(--b);border-radius:999px;padding:2px 10px;font-size:11px}
+.bar{height:7px;border-radius:9px;background:#ECEFF1;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px}
+.cb .btn{margin-top:auto;padding:8px;font-size:13px}.regime-icon{display:inline-block;width:56px;height:56px;border-radius:16px;background-image:url('logo/ChatGPT Image Sep 29, 2026, 11_47_43 PM.png');background-repeat:no-repeat;background-size:300% 100%;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 12px rgba(21,72,96,.12)}
+.regime-icon.break{background-position:0 0}
+.regime-icon.low-pressure{background-position:50% 0}
+.regime-icon.orographic{background-position:100% 0}
+.regime-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 10px;border-radius:999px;background:#f4fbff;border:1px solid rgba(91,132,145,.16)}
+.regime-badge .regime-icon{width:28px;height:28px;border-radius:10px}.ov{position:fixed;inset:0;background:rgba(38,50,55,.35);display:none;z-index:50;overflow:auto;padding:30px 16px}.ov.on{display:block}
+.modal{max-width:1100px;margin:auto;background:#fff;border-radius:24px;padding:24px;position:relative;animation:in .3s}@keyframes in{from{opacity:0;transform:translateY(20px)}}
+.x{position:absolute;right:18px;top:14px;font-size:24px;cursor:pointer}.cols{display:grid;grid-template-columns:1.4fr 1fr;gap:20px}
+.buy{border:1px solid #E3F2FD;border-radius:18px;padding:18px;background:#FAFDFF;height:fit-content}
+.hv{margin:10px 0}.hv div{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.foot{background:#455A64;color:#ECEFF1;margin-top:40px;padding:30px 20px;text-align:center}.top{background:#CFE8F5;text-align:center;padding:14px;cursor:pointer;font-weight:500}
+@media(max-width:900px){.hero,.main,.cols,.banner{grid-template-columns:1fr}.side{position:static}}
+</style></head><body>
+<div class="nav"><a class="logo" href="#"><span class="logo-mark"><img src="logo/ChatGPT Image Sep 29, 2026, 11_42_58 PM.png" alt="India map logo"></span><span class="logo-text"><span class="brand-main">REGEN</span></a>
+<div class="search"><input id="q" placeholder="Search a district, e.g. District 7"><span>🔍</span></div>
+<select id="day"></select></div>
+<div class="sub" id="sub"></div>
+<div class="wrap" id="home">
+<div class="hero"><div class="banner"><div><h1>Today's monsoon rain,<br>made more correct.</h1><p>We check the weather model, find the monsoon type, ask 4 experts and mix their answers.</p><button class="btn" onclick="go('list')">Shop all districts →</button></div><div class="mapbox" id="map"></div></div>
+<div class="tiles"><div class="tile" style="background:linear-gradient(135deg,#fff,var(--g))"><h3>🎯 Error reduced</h3><div class="big" id="k1">–</div><div class="mu" id="k1s"></div></div>
+<div class="tile" style="background:linear-gradient(135deg,#fff,var(--o))"><h3>⚠️ Heavy rain alerts</h3><div class="big" id="k2">–</div><div class="mu">districts above 50% chance of &gt; 64.5 mm</div></div>
+<div class="tile" style="background:linear-gradient(135deg,#fff,var(--b))"><h3>🛡️ Trust score</h3><div class="big" id="k3">–</div><div class="mu">real rain stayed inside our 90% range</div></div></div></div>
+<h2>🔥 Wettest districts today</h2><div class="row" id="top"></div>
+<h2 id="list">All districts</h2>
+<div class="main"><aside class="side"><h4 style="margin-top:0">Sort by</h4><select id="sort" style="width:100%"><option value="wet">Most rain</option><option value="dry">Least rain</option><option value="sure">Most sure</option></select>
+<h4>Monsoon type</h4><div id="regs"></div><h4>Minimum rain: <span id="minv">0</span> mm</h4><input type="range" id="min" min="0" max="150" value="0">
+<label><input type="checkbox" id="hv"> Only heavy rain alerts</label></aside><div><div class="mu" id="cnt" style="margin-bottom:8px"></div><div class="grid" id="cards"></div></div></div></div>
+<div class="wrap" id="ver" style="display:none"><h2>✅ Verification</h2><div class="kp" id="vk"></div><div class="cols" style="margin-top:16px"><div class="tile" id="vb"></div><div class="tile" id="vr"></div></div></div>
+<div class="top" onclick="scrollTo({top:0,behavior:'smooth'})">↑ Back to top</div><div class="foot">REGEN-AI · Mock data demo · Built with FastAPI, XGBoost, LightGBM &amp; SHAP</div>
+<div class="ov" id="ov"><div class="modal" id="md"></div></div>
+<script>
+const $=s=>document.querySelector(s),api=u=>fetch(u).then(r=>r.json()),RG=["Active","Break","Low Pressure","Orographic"],IC=["⛈️","☀️","🌀","⛰️"];
+const REGIME_CLASS=r=>r.toLowerCase().replace(/\s+/g,"-");
+const SC=[[0,"#F3FBFF"],[.2,"#C7EAFD"],[.4,"#89D8D7"],[.6,"#63B7AE"],[.8,"#F6C891"],[1,"#F39A7D"]],CFG={displaylogo:false,responsive:true,displayModeBar:false};
+const FONT={family:"Poppins",color:"#263238"};let S={day:0,f:null,reg:"All",q:"",sort:"wet",min:0,hv:false};
+const col=v=>v<20?"#E3F2FD":v<60?"#B3E5FC":v<100?"#C8E6C9":v<150?"#FFE0B2":"#FFCDD2";
+const ratio=d=>(d.q90-d.q10)/Math.max(d.corrected,10),stars=d=>{const n=5-Math.min(4,Math.round(ratio(d)*2.5));return"★".repeat(n)+"☆".repeat(5-n)};
+function go(id){$("#ver").style.display="none";$("#home").style.display="block";document.getElementById(id).scrollIntoView({behavior:"smooth"})}
+function mapPlot(el,F,key,title,h){
+  const box = document.getElementById(el);
+  if (!box) return;
+  box.innerHTML = "";
+  box.style.height = h + "px";
+  box.style.background = "url('logo/ChatGPT Image Sep 29, 2026, 11_42_58 PM.png') center/cover no-repeat";
+  box.style.borderRadius = "18px";
+  box.style.border = "1px solid rgba(126,170,188,.18)";
+  box.style.boxShadow = "inset 0 1px 0 rgba(255,255,255,.7)";
+  box.style.overflow = "hidden";
+}
+function card(d){const up=d.corrected-d.raw,i=RG.indexOf(d.regime),cls=REGIME_CLASS(d.regime);
+ return`<div class="card" onclick="openD(${d.id})"><div class="img" style="background:linear-gradient(135deg,${col(d.corrected)},#fff)"><span class="regime-icon ${cls}"></span><span class="badge">${d.regime}</span><span class="badge up" style="left:auto;right:10px">${up>=0?"▲":"▼"} ${Math.abs(up).toFixed(0)} mm fix</span></div>
+ <div class="cb"><b class="t">${d.name}</b><div class="price">${d.corrected.toFixed(0)} mm<s>${d.raw.toFixed(0)} mm</s></div><div class="stars" title="How sure we are">${stars(d)}</div>
+ <div class="mu">Heavy rain chance ${(d.heavy[0]*100).toFixed(0)}%</div><div class="bar"><i style="width:${d.heavy[0]*100}%;background:${d.heavy[0]>.5?"#EF9A9A":"#A5D6A7"}"></i></div><button class="btn">View forecast</button></div></div>`}
+function list(){const a=S.f.districts.filter(d=>(S.reg=="All"||d.regime==S.reg)&&d.name.toLowerCase().includes(S.q)&&d.corrected>=S.min&&(!S.hv||d.heavy[0]>.5));
+ a.sort({wet:(x,y)=>y.corrected-x.corrected,dry:(x,y)=>x.corrected-y.corrected,sure:(x,y)=>ratio(x)-ratio(y)}[S.sort]);return a}
+function render(){const a=list();$("#cards").innerHTML=a.map(card).join("")||"<p>No districts match. Try changing the filters.</p>";$("#cnt").textContent=a.length+" districts found · Forecast day "+(S.day+1);
+ $("#top").innerHTML=[...S.f.districts].sort((x,y)=>y.corrected-x.corrected).slice(0,6).map(card).join("");
+ $("#k2").textContent=S.f.districts.filter(d=>d.heavy[0]>.5).length+" / 25";mapPlot("map",S.f,"cor","",360)}
+async function openD(id){const d=S.f.districts.find(x=>x.id==id),p=d.poly,pts=S.f.points.filter(q=>q.lon>=p.lon0&&q.lon<=p.lon1&&q.lat>=p.lat0&&q.lat<=p.lat1).sort((a,b)=>b.cor-a.cor);
+ const e=await api(`/api/explain?day=${S.day}&grid_id=${pts[0].id}`),hn=["Heavy > 64.5 mm","Very heavy > 115.6 mm","Extreme > 204.5 mm"],cls=REGIME_CLASS(d.regime);
+ $("#md").innerHTML=`<span class="x" onclick="$('#ov').classList.remove('on')">✕</span><h2 style="margin-top:0">${d.name} <span class="regime-badge"><span class="regime-icon ${cls}"></span>${d.regime} day</span></h2>
+ <div class="cols"><div><div id="d1"></div><div id="d2"></div></div><div><div class="buy"><div class="mu">Corrected forecast</div><div class="price" style="font-size:34px">${d.corrected.toFixed(0)} mm<s>${d.raw.toFixed(0)} mm raw</s></div>
+ <div class="stars">${stars(d)}</div><div class="mu">90% range: ${d.q10.toFixed(0)} – ${d.q90.toFixed(0)} mm</div><h4>Heavy rain chances</h4>
+ ${d.heavy.map((h,i)=>`<div class="hv"><div><span>${hn[i]}</span><b>${(h*100).toFixed(0)}%</b></div><div class="bar"><i style="width:${h*100}%;background:${["#A5D6A7","#FFCC80","#EF9A9A"][i]}"></i></div></div>`).join("")}
+ <h4>Top reasons (point ${e.grid_id})</h4>${e.feats.map(f=>`<div style="margin:4px 0">${f.value>=0?"🟢":"🔴"} ${f.level} ${f.name}: <b>${f.value>0?"+":""}${f.value} mm</b></div>`).join("")}</div></div></div><div id="d3"></div>`;
+ $("#ov").classList.add("on");const L={paper_bgcolor:"rgba(0,0,0,0)",plot_bgcolor:"rgba(0,0,0,0)",font:FONT,margin:{l:40,r:10,t:36,b:30},height:290};
+ Plotly.newPlot("d1",[{type:"bar",x:RG,y:d.probs.map(v=>v*100),marker:{color:["#B3E5FC","#C8E6C9","#FFE0B2","#FFCDD2"]}}],{...L,title:{text:"What kind of monsoon day? (%)",font:{size:14}}},CFG);
+ Plotly.newPlot("d2",[{type:"bar",x:[...e.mix.map(m=>m.regime),"FINAL"],y:[...e.mix.map(m=>m.part),e.final],text:[...e.mix.map(m=>m.part.toFixed(0)+" mm"),e.final.toFixed(0)+" mm"],textposition:"outside",marker:{color:["#B3E5FC","#C8E6C9","#FFE0B2","#FFCDD2","#81D4FA"]}}],{...L,title:{text:"Mixing: regime chance × expert answer (mm)",font:{size:14}}},CFG);
+ Plotly.newPlot("d3",[{type:"waterfall",x:["Average day",...e.feats.map(f=>f.name),"Other things","Corrected"],y:[e.base,...e.feats.map(f=>f.value),e.other,null],measure:["absolute",...e.feats.map(_=>"relative"),"relative","total"],increasing:{marker:{color:"#A5D6A7"}},decreasing:{marker:{color:"#EF9A9A"}},totals:{marker:{color:"#81D4FA"}}}],{...L,height:340,title:{text:"Why this answer? (SHAP waterfall, mm)",font:{size:14}}},CFG)}
+async function showVer(){$("#home").style.display="none";$("#ver").style.display="block";scrollTo(0,0);const v=await api("/api/verification"),L={paper_bgcolor:"rgba(0,0,0,0)",font:FONT,margin:{l:40,r:10,t:36,b:40},height:320};
+ $("#vk").innerHTML=["RMSE","MAE","Bias"].map((k,i)=>`<div class="tile" style="background:linear-gradient(135deg,#fff,${["#B3E5FC","#C8E6C9","#FFE0B2"][i]})"><div class="mu">${k} (mm)</div><div class="big">${v.cor[k].toFixed(1)}</div><div class="mu">old forecast: ${v.raw[k].toFixed(1)}</div></div>`).join("")+`<div class="tile"><div class="mu">Real rain inside 90% range</div><div class="big">${v.cov}%</div><div class="mu">${v.n} test cases</div></div>`;
+ Plotly.newPlot("vb",[{type:"bar",name:"Old",x:["RMSE","MAE","Bias (size)"],y:[v.raw.RMSE,v.raw.MAE,Math.abs(v.raw.Bias)],marker:{color:"#FFCC80"}},{type:"bar",name:"AI-corrected",x:["RMSE","MAE","Bias (size)"],y:[v.cor.RMSE,v.cor.MAE,Math.abs(v.cor.Bias)],marker:{color:"#A5D6A7"}}],{...L,barmode:"group",title:{text:"Errors: smaller is better",font:{size:14}}},CFG);
+ Plotly.newPlot("vr",[{x:[0,1],y:[0,1],mode:"lines",name:"Perfect",line:{dash:"dash",color:"#B0BEC5"}},{x:v.rel.x,y:v.rel.y,mode:"lines+markers",name:"Ours",line:{color:"#64B5F6",width:3}}],{...L,title:{text:"Reliability: does 60% really mean 60%?",font:{size:14}},xaxis:{title:"Chance we said"},yaxis:{title:"How often it happened"}},CFG)}
+(async()=>{const v=await api("/api/verification");$("#k1").textContent=Math.round((1-v.cor.RMSE/v.raw.RMSE)*100)+"%";$("#k1s").textContent=`RMSE ${v.raw.RMSE.toFixed(0)} → ${v.cor.RMSE.toFixed(0)} mm`;$("#k3").textContent=v.cov+"%";
+ $("#day").innerHTML=Array.from({length:30},(_,i)=>`<option value="${i}">📅 Day ${i+1}</option>`).join("");
+    const subItems = ["All"].concat(RG).map(r => {
+      const label = r === "All" ? "☰ All" : '<span class="regime-icon ' + REGIME_CLASS(r) + '" style="width:18px;height:18px;border-radius:7px;vertical-align:middle;margin-right:6px"></span>' + r;
+      return '<a class="' + (r === "All" ? "on" : "") + '" onclick="setReg(\'' + r + '\',this)">' + label + '</a>';
+    });
+    $("#sub").innerHTML = subItems.join("") + '<a onclick="showVer()">✅ Verification</a>';
+    $("#regs").innerHTML=["All",...RG].map(r=>`<label><input type="radio" name="rg" ${r=="All"?"checked":""} onchange="setReg('${r}')"> ${r}</label>`).join("");
+ $("#q").oninput=e=>{S.q=e.target.value.toLowerCase();render()};$("#sort").onchange=e=>{S.sort=e.target.value;render()};$("#hv").onchange=e=>{S.hv=e.target.checked;render()};
+ $("#min").oninput=e=>{S.min=+e.target.value;$("#minv").textContent=S.min;render()};$("#day").onchange=async e=>{S.day=+e.target.value;S.f=await api("/api/forecast?day="+S.day);render()};
+ $("#ov").onclick=e=>{if(e.target.id=="ov")$("#ov").classList.remove("on")};S.f=await api("/api/forecast?day=0");render()})();
+function setReg(r,el){S.reg=r;document.querySelectorAll(".sub a").forEach(a=>a.classList.remove("on"));if(el)el.classList.add("on");$("#ver").style.display="none";$("#home").style.display="block";render();if(el)go("list")}
+</script></body></html>
