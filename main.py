@@ -24,8 +24,8 @@ app = FastAPI(title="REGEN-AI API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://regen-kzyptgec5-mukulsaini76059-3689s-projects.vercel.app"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
