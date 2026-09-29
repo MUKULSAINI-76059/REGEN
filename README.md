@@ -180,17 +180,6 @@ http://localhost:8000
 
 ---
 
-## 📸 Screenshots
-
-| Dashboard | District Forecast |
-| --- | --- |
-| *(add screenshot)* | *(add screenshot)* |
-
-| SHAP Explanation | Verification |
-| --- | --- |
-| *(add screenshot)* | *(add screenshot)* |
-
----
 
 ## 🔭 Future Scope
 
