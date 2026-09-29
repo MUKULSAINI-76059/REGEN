@@ -81,6 +81,12 @@ const IC = ["⛈️","☀️","🌀","⛰️"];
 const SC=[[0,"#F3FBFF"],[.2,"#C7EAFD"],[.4,"#89D8D7"],[.6,"#63B7AE"],[.8,"#F6C891"],[1,"#F39A7D"]],CFG={displaylogo:false,responsive:true,displayModeBar:false};
 const FONT={family:"Poppins",color:"#263238"};let S={day:0,f:null,reg:"All",q:"",sort:"wet",min:0,hv:false};
 const col=v=>v<20?"#E3F2FD":v<60?"#B3E5FC":v<100?"#C8E6C9":v<150?"#FFE0B2":"#FFCDD2";
+function REGIME_CLASS(r){
+  if(r==="Break") return "break";
+  if(r==="Low Pressure") return "low-pressure";
+  if(r==="Orographic") return "orographic";
+  return "";
+}
 const ratio=d=>(d.q90-d.q10)/Math.max(d.corrected,10),stars=d=>{const n=5-Math.min(4,Math.round(ratio(d)*2.5));return"★".repeat(n)+"☆".repeat(5-n)};
 function go(id){$("#ver").style.display="none";$("#home").style.display="block";document.getElementById(id).scrollIntoView({behavior:"smooth"})}
 function mapPlot(el,F,key,title,h){
