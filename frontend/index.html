@@ -72,8 +72,10 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 <div class="top" onclick="scrollTo({top:0,behavior:'smooth'})">↑ Back to top</div><div class="foot">REGEN-AI · Mock data demo · Built with FastAPI, XGBoost, LightGBM &amp; SHAP</div>
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
 <script>
-const $=s=>document.querySelector(s),api=u=>fetch(u).then(r=>r.json()),RG=["Active","Break","Low Pressure","Orographic"],IC=["⛈️","☀️","🌀","⛰️"];
-const REGIME_CLASS=r=>r.toLowerCase().replace(/\s+/g,"-");
+const API = "https://regen-525q.onrender.com";
+
+const $=s=>document.querySelector(s),
+api=u=>fetch(API + u).then(r=>r.json())
 const SC=[[0,"#F3FBFF"],[.2,"#C7EAFD"],[.4,"#89D8D7"],[.6,"#63B7AE"],[.8,"#F6C891"],[1,"#F39A7D"]],CFG={displaylogo:false,responsive:true,displayModeBar:false};
 const FONT={family:"Poppins",color:"#263238"};let S={day:0,f:null,reg:"All",q:"",sort:"wet",min:0,hv:false};
 const col=v=>v<20?"#E3F2FD":v<60?"#B3E5FC":v<100?"#C8E6C9":v<150?"#FFE0B2":"#FFCDD2";
