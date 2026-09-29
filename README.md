@@ -1,6 +1,6 @@
 <div align="center">
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Poppins&weight=900&size=44&duration=2500&pause=600&color=3B82F6&center=true&vCenter=true&width=950&height=110&lines=🌧️+REGEN;🧭+Regime-Aware+Rainfall+Forecasting;🎯+Smarter+Monsoon+Predictions+with+AI;🔍+Explainable+%7C+Reliable+%7C+Uncertainty-Aware;🚀+Built+for+SIH+26080)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Poppins&weight=900&size=44&duration=2500&pause=600&color=3B82F6&center=true&vCenter=true&width=950&height=110&lines=🌧️+REGEN;🧭+Regime-Aware+Rainfall+Forecasting;🎯+Smarter+Monsoon+Predictions+with+AI;🔍+Explainable+%7C+Reliable+%7C+Uncertainty;🚀+Built+for+SIH+26080)](https://git.io/typing-svg)
 
 ---
 
@@ -207,16 +207,23 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
  
 <div align="center">
  
 **Mukul Saini**
  
 [![GitHub](https://img.shields.io/badge/GitHub-MUKULSAINI--76059-181717?style=for-the-badge&logo=github)](https://github.com/MUKULSAINI-76059)
-
----
+ 
+<br/>
+ 
+**Omkar Pandey**
+ 
+[![GitHub](https://img.shields.io/badge/GitHub-panditomkarpandey-181717?style=for-the-badge&logo=github)](https://github.com/panditomkarpandey)
+ 
 </div>
+ 
+---
 
 
 
