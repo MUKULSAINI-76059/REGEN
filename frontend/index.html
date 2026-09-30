@@ -1,4 +1,7 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link rel="preload"
+      as="image"
+      href="logo/logo.webp"
+      type="image/webp"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>REGEN — Better monsoon rain forecasts</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
@@ -130,7 +133,10 @@ async function openD(id){const d=S.f.districts.find(x=>x.id==id),p=d.poly,pts=S.
  Plotly.newPlot("d1",[{type:"bar",x:RG,y:d.probs.map(v=>v*100),marker:{color:["#B3E5FC","#C8E6C9","#FFE0B2","#FFCDD2"]}}],{...L,title:{text:"What kind of monsoon day? (%)",font:{size:14}}},CFG);
  Plotly.newPlot("d2",[{type:"bar",x:[...e.mix.map(m=>m.regime),"FINAL"],y:[...e.mix.map(m=>m.part),e.final],text:[...e.mix.map(m=>m.part.toFixed(0)+" mm"),e.final.toFixed(0)+" mm"],textposition:"outside",marker:{color:["#B3E5FC","#C8E6C9","#FFE0B2","#FFCDD2","#81D4FA"]}}],{...L,title:{text:"Mixing: regime chance × expert answer (mm)",font:{size:14}}},CFG);
  Plotly.newPlot("d3",[{type:"waterfall",x:["Average day",...e.feats.map(f=>f.name),"Other things","Corrected"],y:[e.base,...e.feats.map(f=>f.value),e.other,null],measure:["absolute",...e.feats.map(_=>"relative"),"relative","total"],increasing:{marker:{color:"#A5D6A7"}},decreasing:{marker:{color:"#EF9A9A"}},totals:{marker:{color:"#81D4FA"}}}],{...L,height:340,title:{text:"Why this answer? (SHAP waterfall, mm)",font:{size:14}}},CFG)}
-async function showVer(){$("#home").style.display="none";$("#ver").style.display="block";scrollTo(0,0);const v=await api("/api/verification"),L={paper_bgcolor:"rgba(0,0,0,0)",font:FONT,margin:{l:40,r:10,t:36,b:40},height:320};
+async function showVer(){$("#home").style.display="none";$("#ver").style.display="block";scrollTo(0,0);    document.querySelectorAll(".sub a").forEach(a => a.classList.remove("on"));
+    document.querySelectorAll(".sub a").forEach(a => {
+        if(a.textContent.includes("Verification")) a.classList.add("on");
+    });const v=await api("/api/verification"),L={paper_bgcolor:"rgba(0,0,0,0)",font:FONT,margin:{l:40,r:10,t:36,b:40},height:320};
  $("#vk").innerHTML=["RMSE","MAE","Bias"].map((k,i)=>`<div class="tile" style="background:linear-gradient(135deg,#fff,${["#B3E5FC","#C8E6C9","#FFE0B2"][i]})"><div class="mu">${k} (mm)</div><div class="big">${v.cor[k].toFixed(1)}</div><div class="mu">old forecast: ${v.raw[k].toFixed(1)}</div></div>`).join("")+`<div class="tile"><div class="mu">Real rain inside 90% range</div><div class="big">${v.cov}%</div><div class="mu">${v.n} test cases</div></div>`;
  Plotly.newPlot("vb",[{type:"bar",name:"Old",x:["RMSE","MAE","Bias (size)"],y:[v.raw.RMSE,v.raw.MAE,Math.abs(v.raw.Bias)],marker:{color:"#FFCC80"}},{type:"bar",name:"AI-corrected",x:["RMSE","MAE","Bias (size)"],y:[v.cor.RMSE,v.cor.MAE,Math.abs(v.cor.Bias)],marker:{color:"#A5D6A7"}}],{...L,barmode:"group",title:{text:"Errors: smaller is better",font:{size:14}}},CFG);
  Plotly.newPlot("vr",[{x:[0,1],y:[0,1],mode:"lines",name:"Perfect",line:{dash:"dash",color:"#B0BEC5"}},{x:v.rel.x,y:v.rel.y,mode:"lines+markers",name:"Ours",line:{color:"#64B5F6",width:3}}],{...L,title:{text:"Reliability: does 60% really mean 60%?",font:{size:14}},xaxis:{title:"Chance we said"},yaxis:{title:"How often it happened"}},CFG)}
