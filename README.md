@@ -181,6 +181,25 @@ http://localhost:8000
 ---
 
 
+## 📸 Screenshots
+
+| Home Page |
+|---|
+<img width="1852" height="889" alt="Home Page" src=""C:\Users\HP\Pictures\Screenshots\Screenshot 2026-10-01 010918.png"" />
+
+| Dashboard |
+|---|
+<img width="1894" height="876" alt="Dashboard" src="YOUR_IMAGE_LINK" />
+
+| Supports |
+|---|
+<img width="1898" height="886" alt="Supports" src="YOUR_IMAGE_LINK" />
+
+| Verification |
+|---|
+<img width="1898" height="886" alt="Verification" src="YOUR_IMAGE_LINK" />
+
+
 ## 🔭 Future Scope
 
 - Replace mock data with real NWP forecasts and IMD gridded observations
