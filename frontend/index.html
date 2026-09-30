@@ -53,6 +53,7 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 .kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
 .foot{background:#455A64;color:#ECEFF1;margin-top:40px;padding:30px 20px;text-align:center}.top{background:#CFE8F5;text-align:center;padding:14px;cursor:pointer;font-weight:500}
 @media(max-width:900px){.hero,.main,.cols,.banner{grid-template-columns:1fr}.side{position:static}}
+.server-status{position:fixed;inset:0;display:grid;place-items:center;padding:20px;background:rgba(24,56,75,.34);z-index:100}.server-status[hidden]{display:none}.server-status-card{width:min(100%,430px);padding:30px 26px;text-align:center;background:#fff;border-radius:20px;box-shadow:0 18px 45px rgba(24,56,75,.22)}.server-status-card h2{margin:14px 0 8px;font-size:20px}.server-status-card p{margin:0;color:var(--mu);line-height:1.6}.server-spinner{width:42px;height:42px;margin:auto;border:4px solid #D7F0FF;border-top-color:#4CA6B7;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.server-error{color:#A94442!important}.server-retry{margin-top:18px}
 </style></head><body>
 <div class="nav"><a class="logo" href="#"><span class="logo-mark"><img src="logo/ChatGPT Image Sep 29, 2026, 11_42_58 PM.png" alt="India map logo"></span><span class="logo-text"><span class="brand-main">REGEN</span></a>
 <div class="search"><input id="q" placeholder="Search a district, e.g. District 7"><span>🔍</span></div>
@@ -71,11 +72,20 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 <div class="wrap" id="ver" style="display:none"><h2>✅ Verification</h2><div class="kp" id="vk"></div><div class="cols" style="margin-top:16px"><div class="tile" id="vb"></div><div class="tile" id="vr"></div></div></div>
 <div class="top" onclick="scrollTo({top:0,behavior:'smooth'})">↑ Back to top</div><div class="foot">REGEN-AI · Mock data demo · Built with FastAPI, XGBoost, LightGBM &amp; SHAP</div>
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
+<div class="server-status" id="serverStatus" role="status" aria-live="polite"><div class="server-status-card"><div class="server-spinner" id="serverSpinner" aria-hidden="true"></div><h2 id="serverStatusTitle">Please wait...</h2><p id="serverStatusMessage">Our server is waking up. This may take a few seconds.</p><button class="btn server-retry" id="serverRetry" hidden>Try again</button></div></div>
 <script>
 const API = "https://regen-525q.onrender.com";
 
 const $=s=>document.querySelector(s),
-api=u=>fetch(API + u).then(r=>r.json())
+api=u=>fetch(API + u).then(r=>{if(!r.ok) throw new Error(`Request failed (${r.status})`);return r.json()})
+const STARTUP_TIMEOUT=120000;
+function setServerStatus(state){
+ const box=$("#serverStatus"),spinner=$("#serverSpinner"),title=$("#serverStatusTitle"),message=$("#serverStatusMessage"),retry=$("#serverRetry");
+ box.hidden=state==="hidden"; retry.hidden=state!=="error"; spinner.hidden=state==="error";
+ if(state==="loading"){title.textContent="Please wait...";message.textContent="Our server is waking up. This may take a few seconds.";message.classList.remove("server-error")}
+ if(state==="error"){title.textContent="Unable to load the forecast";message.textContent="The server is taking longer than usual. Please try again.";message.classList.add("server-error")}
+}
+function startupRequest(url){return Promise.race([api(url),new Promise((_,reject)=>setTimeout(()=>reject(new Error("startup timeout")),STARTUP_TIMEOUT))])}
 const RG = ["Active","Break","Low Pressure","Orographic"];
 const IC = ["⛈️","☀️","🌀","⛰️"];
 const SC=[[0,"#F3FBFF"],[.2,"#C7EAFD"],[.4,"#89D8D7"],[.6,"#63B7AE"],[.8,"#F6C891"],[1,"#F39A7D"]],CFG={displaylogo:false,responsive:true,displayModeBar:false};
@@ -124,7 +134,11 @@ async function showVer(){$("#home").style.display="none";$("#ver").style.display
  $("#vk").innerHTML=["RMSE","MAE","Bias"].map((k,i)=>`<div class="tile" style="background:linear-gradient(135deg,#fff,${["#B3E5FC","#C8E6C9","#FFE0B2"][i]})"><div class="mu">${k} (mm)</div><div class="big">${v.cor[k].toFixed(1)}</div><div class="mu">old forecast: ${v.raw[k].toFixed(1)}</div></div>`).join("")+`<div class="tile"><div class="mu">Real rain inside 90% range</div><div class="big">${v.cov}%</div><div class="mu">${v.n} test cases</div></div>`;
  Plotly.newPlot("vb",[{type:"bar",name:"Old",x:["RMSE","MAE","Bias (size)"],y:[v.raw.RMSE,v.raw.MAE,Math.abs(v.raw.Bias)],marker:{color:"#FFCC80"}},{type:"bar",name:"AI-corrected",x:["RMSE","MAE","Bias (size)"],y:[v.cor.RMSE,v.cor.MAE,Math.abs(v.cor.Bias)],marker:{color:"#A5D6A7"}}],{...L,barmode:"group",title:{text:"Errors: smaller is better",font:{size:14}}},CFG);
  Plotly.newPlot("vr",[{x:[0,1],y:[0,1],mode:"lines",name:"Perfect",line:{dash:"dash",color:"#B0BEC5"}},{x:v.rel.x,y:v.rel.y,mode:"lines+markers",name:"Ours",line:{color:"#64B5F6",width:3}}],{...L,title:{text:"Reliability: does 60% really mean 60%?",font:{size:14}},xaxis:{title:"Chance we said"},yaxis:{title:"How often it happened"}},CFG)}
-(async()=>{const v=await api("/api/verification");$("#k1").textContent=Math.round((1-v.cor.RMSE/v.raw.RMSE)*100)+"%";$("#k1s").textContent=`RMSE ${v.raw.RMSE.toFixed(0)} → ${v.cor.RMSE.toFixed(0)} mm`;$("#k3").textContent=v.cov+"%";
+async function startApplication(){
+ setServerStatus("loading");
+ try{
+  const [v,forecast]=await Promise.all([startupRequest("/api/verification"),startupRequest("/api/forecast?day=0")]);
+  $("#k1").textContent=Math.round((1-v.cor.RMSE/v.raw.RMSE)*100)+"%";$("#k1s").textContent=`RMSE ${v.raw.RMSE.toFixed(0)} → ${v.cor.RMSE.toFixed(0)} mm`;$("#k3").textContent=v.cov+"%";
  $("#day").innerHTML=Array.from({length:30},(_,i)=>`<option value="${i}">📅 Day ${i+1}</option>`).join("");
     const subItems = ["All"].concat(RG).map(r => {
       const label = r === "All" ? "☰ All" : '<span class="regime-icon ' + REGIME_CLASS(r) + '" style="width:18px;height:18px;border-radius:7px;vertical-align:middle;margin-right:6px"></span>' + r;
@@ -132,8 +146,12 @@ async function showVer(){$("#home").style.display="none";$("#ver").style.display
     });
     $("#sub").innerHTML = subItems.join("") + '<a onclick="showVer()">✅ Verification</a>';
     $("#regs").innerHTML=["All",...RG].map(r=>`<label><input type="radio" name="rg" ${r=="All"?"checked":""} onchange="setReg('${r}')"> ${r}</label>`).join("");
- $("#q").oninput=e=>{S.q=e.target.value.toLowerCase();render()};$("#sort").onchange=e=>{S.sort=e.target.value;render()};$("#hv").onchange=e=>{S.hv=e.target.checked;render()};
- $("#min").oninput=e=>{S.min=+e.target.value;$("#minv").textContent=S.min;render()};$("#day").onchange=async e=>{S.day=+e.target.value;S.f=await api("/api/forecast?day="+S.day);render()};
- $("#ov").onclick=e=>{if(e.target.id=="ov")$("#ov").classList.remove("on")};S.f=await api("/api/forecast?day=0");render()})();
+  $("#q").oninput=e=>{S.q=e.target.value.toLowerCase();render()};$("#sort").onchange=e=>{S.sort=e.target.value;render()};$("#hv").onchange=e=>{S.hv=e.target.checked;render()};
+  $("#min").oninput=e=>{S.min=+e.target.value;$("#minv").textContent=S.min;render()};$("#day").onchange=async e=>{S.day=+e.target.value;S.f=await api("/api/forecast?day="+S.day);render()};
+  $("#ov").onclick=e=>{if(e.target.id=="ov")$("#ov").classList.remove("on")};S.f=forecast;render();setServerStatus("hidden");
+ }catch(error){setServerStatus("error")}
+}
+$("#serverRetry").onclick=startApplication;
+startApplication();
 function setReg(r,el){S.reg=r;document.querySelectorAll(".sub a").forEach(a=>a.classList.remove("on"));if(el)el.classList.add("on");$("#ver").style.display="none";$("#home").style.display="block";render();if(el)go("list")}
 </script></body></html>
