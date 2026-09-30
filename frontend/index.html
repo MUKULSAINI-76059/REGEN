@@ -24,7 +24,7 @@ select,.chipb{font:inherit;border:0;border-radius:10px;padding:9px 12px;backgrou
 .banner{background:radial-gradient(circle at top left,#f0fbff 0%,#dff7f5 30%,#f4e7d0 100%);border-radius:22px;padding:34px;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;box-shadow:0 12px 28px rgba(42,85,97,.14);min-height:400px;border:1px solid rgba(103,146,161,.08)}
 .banner h1{font-size:34px;line-height:1.15;margin:0 0 10px;color:var(--ink)}.banner p{color:#45616d;margin:0 0 18px;font-size:15px}
 .btn{background:linear-gradient(135deg,#ffd8ab,#ffc77c);border:1px solid rgba(233,170,78,.8);border-radius:999px;padding:10px 22px;font:600 14px Poppins;cursor:pointer;box-shadow:0 6px 18px rgba(243,154,125,.25);transition:.2s}.btn:hover{background:linear-gradient(135deg,#ffc77c,#f7b35b);transform:translateY(-1px)}
-.mapbox{background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(198,233,244,.62)),url('logo/ChatGPT Image Sep 29, 2026, 11_42_58 PM.png') center/cover no-repeat;border-radius:18px;border:1px solid rgba(126,170,188,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.mapbox{background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(198,233,244,.62)),url('logo/map.webp') center/cover no-repeat;border-radius:18px;border:1px solid rgba(126,170,188,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
 .tiles{display:grid;gap:16px}.tile{background:#fff;border-radius:22px;padding:18px;box-shadow:0 6px 18px rgba(100,181,246,.16)}
 .tile h3{margin:0 0 8px;font-size:15px}.big{font-size:30px;font-weight:700}.mu{color:var(--mu);font-size:12px}
 h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;padding:4px 2px 14px}
@@ -40,7 +40,7 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 .cb b.t{font-size:15px}.price{font-size:24px;font-weight:700}.price s{font-size:13px;color:var(--mu);font-weight:400;margin-left:6px}
 .stars{color:#FFB74D;letter-spacing:2px}.pill{display:inline-block;background:var(--b);border-radius:999px;padding:2px 10px;font-size:11px}
 .bar{height:7px;border-radius:9px;background:#ECEFF1;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px}
-.cb .btn{margin-top:auto;padding:8px;font-size:13px}.regime-icon{display:inline-block;width:56px;height:56px;border-radius:16px;background-image:url('logo/ChatGPT Image Sep 29, 2026, 11_47_43 PM.png');background-repeat:no-repeat;background-size:300% 100%;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 12px rgba(21,72,96,.12)}
+.cb .btn{margin-top:auto;padding:8px;font-size:13px}.regime-icon{display:inline-block;width:56px;height:56px;border-radius:16px;background-image:url('logo/logo.webp');background-repeat:no-repeat;background-size:300% 100%;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 6px 12px rgba(21,72,96,.12)}
 .regime-icon.break{background-position:0 0}
 .regime-icon.low-pressure{background-position:50% 0}
 .regime-icon.orographic{background-position:100% 0}
@@ -55,7 +55,7 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 @media(max-width:900px){.hero,.main,.cols,.banner{grid-template-columns:1fr}.side{position:static}}
 .server-status{position:fixed;inset:0;display:grid;place-items:center;padding:20px;background:rgba(24,56,75,.34);z-index:100}.server-status[hidden]{display:none}.server-status-card{width:min(100%,430px);padding:30px 26px;text-align:center;background:#fff;border-radius:20px;box-shadow:0 18px 45px rgba(24,56,75,.22)}.server-status-card h2{margin:14px 0 8px;font-size:20px}.server-status-card p{margin:0;color:var(--mu);line-height:1.6}.server-spinner{width:42px;height:42px;margin:auto;border:4px solid #D7F0FF;border-top-color:#4CA6B7;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.server-error{color:#A94442!important}.server-retry{margin-top:18px}
 </style></head><body>
-<div class="nav"><a class="logo" href="#"><span class="logo-mark"><img src="logo/ChatGPT Image Sep 29, 2026, 11_42_58 PM.png" alt="India map logo"></span><span class="logo-text"><span class="brand-main">REGEN</span></a>
+<div class="nav"><a class="logo" href="#"><span class="logo-mark"><img src="logo/map.webp" alt="India map logo"></span><span class="logo-text"><span class="brand-main">REGEN</span></a>
 <div class="search"><input id="q" placeholder="Search a district, e.g. District 7"><span>🔍</span></div>
 <select id="day"></select></div>
 <div class="sub" id="sub"></div>
@@ -104,7 +104,7 @@ function mapPlot(el,F,key,title,h){
   if (!box) return;
   box.innerHTML = "";
   box.style.height = h + "px";
-  box.style.background = "url('logo/ChatGPT Image Sep 29, 2026, 11_42_58 PM.png') center/cover no-repeat";
+  box.style.background = "url('logo/map.webp') center/cover no-repeat";
   box.style.borderRadius = "18px";
   box.style.border = "1px solid rgba(126,170,188,.18)";
   box.style.boxShadow = "inset 0 1px 0 rgba(255,255,255,.7)";
