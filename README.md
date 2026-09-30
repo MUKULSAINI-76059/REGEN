@@ -58,7 +58,7 @@ The result is a corrected, explainable, uncertainty-aware rainfall forecast for 
 ## 🌐 Live Demo
 
 
-👉 **<https://comfy-squirrel-123dca.netlify.app/>**
+👉 **<https://regen-w.netlify.app/>**
 
 ---
 
