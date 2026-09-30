@@ -85,23 +85,7 @@ Raw NWP + atmospheric features
 └──────────────────────────┘
 ```
 
-### Input Features
 
-```text
-nwp_rainfall
-u850
-v850
-z500
-mslp
-pw
-cape
-past_rain
-elevation
-lat
-lon
-```
-
----
 
 ## 🛠️ Tech Stack
 
@@ -407,75 +391,7 @@ Low Pressure    Orographic
 
 ---
 
-## ⛈️ Heavy Rain Detection
 
-The system also estimates probabilities for different rainfall severity levels.
-
-| Category | Threshold |
-| --- | ---: |
-| **Heavy Rain** | 64.5 mm |
-| **Very Heavy Rain** | 115.6 mm |
-| **Extremely Heavy Rain** | 204.5 mm |
-
-These probabilities can be used to identify areas that may experience significant rainfall.
-
----
-
-## 📏 Uncertainty Estimation
-
-REGEN-AI does not provide only a single rainfall value.
-
-It also generates an uncertainty interval using:
-
-```text
-q10 → Lower rainfall estimate
-q50 → Main forecast
-q90 → Upper rainfall estimate
-```
-
-This gives the user an indication of the range around the predicted rainfall.
-
----
-
-## 🔍 Explainability
-
-The system uses **SHAP** to explain individual predictions.
-
-For a selected grid point, the system can show which input features contributed to the rainfall forecast.
-
-Example features:
-
-```text
-NWP Rainfall
-Past Rainfall
-CAPE
-Precipitable Water
-MSLP
-850 hPa Wind
-Elevation
-Latitude
-Longitude
-```
-
----
-
-## 🗺️ Spatial Correction
-
-Rainfall prediction is not only about the amount of rainfall.
-
-It is also important to estimate **where rainfall occurs**.
-
-The `spatial.py` module performs post-processing to improve the spatial placement of predicted rainfall across the grid.
-
----
-
-## 🏘️ District-Level Forecast
-
-Grid-level predictions are aggregated to provide district-level rainfall information.
-
-The system uses an area-weighted aggregation approach to calculate rainfall for supported districts.
-
----
 
 ## 🔭 Future Scope
 
