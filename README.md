@@ -7,13 +7,9 @@
 <br/>
 
 <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" />
-&nbsp;&nbsp;&nbsp;
 <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
-&nbsp;&nbsp;&nbsp;
 <img src="https://img.shields.io/badge/Status-Active-22c55e?style=for-the-badge" />
-&nbsp;&nbsp;&nbsp;
 <img src="https://img.shields.io/badge/License-MIT-a855f7?style=for-the-badge" />
-&nbsp;&nbsp;&nbsp;
 <img src="https://img.shields.io/github/stars/MUKULSAINI-76059/REGEN?style=for-the-badge&color=FFD700" />
 
 <br/><br/>
@@ -26,7 +22,6 @@
 
 ## 🌦️ About the Project
 
-
 **REGEN-AI** is a working prototype built for **Smart India Hackathon (SIH) — Problem Statement 26080**.
 
 Raw NWP (Numerical Weather Prediction) rainfall forecasts often miss badly during the Indian monsoon, because one single correction cannot fit every weather situation. REGEN-AI fixes this by first identifying the **weather regime** of each grid point, then applying a **specialised expert model** for that regime.
@@ -37,9 +32,7 @@ The result is a corrected, explainable, uncertainty-aware rainfall forecast for 
 
 ---
 
-
 ## ✨ Features
-
 
 | Feature | Description |
 | --- | --- |
@@ -54,39 +47,59 @@ The result is a corrected, explainable, uncertainty-aware rainfall forecast for 
 
 ---
 
-
 ## 🌐 Live Demo
 
-
-👉 **<https://regen-w.netlify.app/>**
+👉 **[REGEN-AI Live Demo](https://regen-w.netlify.app/)**
 
 ---
 
 ## 🧠 How It Works
 
-```
- Raw NWP + atmospheric features
-            │
-            ▼
- ┌──────────────────────────┐
- │ 1. Regime Finder (LGBM)  │ → soft probabilities p0..p3
- └──────────────────────────┘
-            │
-            ▼
- ┌──────────────────────────┐
- │ 2. Regime Experts (XGB)  │ → e0..e3  (one per regime)
- └──────────────────────────┘
-            │   corrected = Σ pₖ · eₖ
-            ▼
- ┌──────────────────────────┐
- │ 3. Heavy-Rain Checkers   │ → h0, h1, h2
- │ 4. Quantile Models       │ → q10, q90
- │ 5. Spatial Fix           │ → fixed rainfall placement
- │ 6. SHAP Explainer        │ → why this forecast?
- └──────────────────────────┘
+```text
+Raw NWP + atmospheric features
+           │
+           ▼
+┌──────────────────────────┐
+│ 1. Regime Finder (LGBM)  │ → soft probabilities p0..p3
+└──────────────────────────┘
+           │
+           ▼
+┌──────────────────────────┐
+│ 2. Regime Experts (XGB)  │ → e0..e3
+│    One expert per regime │
+└──────────────────────────┘
+           │
+           │ corrected = Σ pₖ · eₖ
+           ▼
+┌──────────────────────────┐
+│ 3. Heavy-Rain Checkers   │ → h0, h1, h2
+│ 4. Quantile Models       │ → q10, q90
+│ 5. Spatial Fix           │ → fixed rainfall placement
+│ 6. SHAP Explainer        │ → why this forecast?
+└──────────────────────────┘
+           │
+           ▼
+┌──────────────────────────┐
+│     Final Forecast       │
+│ Grid + District Level    │
+└──────────────────────────┘
 ```
 
-**Input features:** `nwp_rainfall`, `u850`, `v850`, `z500`, `mslp`, `pw`, `cape`, `past_rain`, `elevation`, `lat`, `lon`
+### Input Features
+
+```text
+nwp_rainfall
+u850
+v850
+z500
+mslp
+pw
+cape
+past_rain
+elevation
+lat
+lon
+```
 
 ---
 
@@ -98,36 +111,127 @@ The result is a corrected, explainable, uncertainty-aware rainfall forecast for 
 | **ML Models** | scikit-learn, XGBoost, LightGBM |
 | **Explainability** | SHAP |
 | **Data & Maths** | pandas, NumPy, SciPy |
-| **Visualisation** | Plotly (served locally, works offline) |
-| **Frontend** | Web dashboard in `frontend/` |
+| **Visualisation** | Plotly |
+| **Frontend** | HTML, CSS, JavaScript |
+| **Data** | Synthetic / Mock NWP & rainfall data |
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 REGEN/
-├── 🗂️ frontend/           # Web dashboard UI
-├── data_generator.py      # Mock data, cleaning & 0–1 normalisation, district grid
-├── models.py              # Regime classifier, experts, heavy-rain & quantile models
-├── spatial.py             # Rainfall placement fix
-├── shap_explainer.py      # SHAP explanations for a grid point
-├── verification.py        # Metrics & reliability diagram
-├── main.py                # FastAPI server (trains models on startup)
-└── requirements.txt
+│
+├── 🗂️ frontend/
+│   ├── Page img/
+│   │   ├── Dashboard Page (2).png
+│   │   ├── Dashboard Page.png
+│   │   ├── Verification Page.png
+│   │   └── home page.png
+│   │
+│   ├── logo/
+│   │   ├── logo.webp
+│   │   └── map.webp
+│   │
+│   └── index.html
+│
+├── data_generator.py
+│   # Generates synthetic weather/rainfall data
+│
+├── models.py
+│   # Regime classifier
+│   # Regime-wise expert models
+│   # Heavy-rain classifiers
+│   # Quantile models
+│
+├── spatial.py
+│   # Spatial rainfall placement correction
+│
+├── shap_explainer.py
+│   # SHAP-based forecast explanations
+│
+├── verification.py
+│   # Model verification
+│   # RMSE, MAE, Bias
+│   # Reliability curve
+│   # Coverage calculation
+│
+├── main.py
+│   # FastAPI application
+│   # API endpoints
+│   # Model initialization
+│
+├── requirements.txt
+│
+├── README.md
+│
+└── LICENSE
 ```
 
 ---
 
 ## 🔌 API Endpoints
 
-| Endpoint | Description |
-| --- | --- |
-| `GET /api/forecast?day=0` | Grid points + district-level raw vs corrected rainfall, uncertainty, heavy-rain probabilities, dominant regime |
-| `GET /api/explain?day=0&grid_id=0` | SHAP breakdown and regime-wise mix for one grid point |
-| `GET /api/verification` | Raw vs corrected metrics, reliability curve, coverage % |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/forecast?day=0` | Returns grid-level and district-level rainfall forecasts |
+| `GET` | `/api/explain?day=0&grid_id=0` | Returns SHAP explanation and regime-wise forecast contribution |
+| `GET` | `/api/verification` | Returns verification metrics, reliability curve and coverage |
 
-Interactive API docs are available at `/docs` once the server is running.
+### Forecast API
+
+```text
+GET /api/forecast?day=0
+```
+
+Provides:
+
+- Raw rainfall
+- AI-corrected rainfall
+- Lower uncertainty bound
+- Upper uncertainty bound
+- Heavy rainfall probabilities
+- Dominant weather regime
+- Grid-level forecast
+- District-level forecast
+
+### Explainability API
+
+```text
+GET /api/explain?day=0&grid_id=0
+```
+
+Provides:
+
+- SHAP feature contribution
+- Important weather features
+- Regime probabilities
+- Regime-wise expert contribution
+
+### Verification API
+
+```text
+GET /api/verification
+```
+
+Provides:
+
+- RMSE
+- MAE
+- Bias
+- Raw forecast metrics
+- Corrected forecast metrics
+- Reliability curve
+- Coverage percentage
+- Test case count
+
+Interactive API documentation is available at:
+
+```text
+/docs
+```
+
+when the FastAPI server is running.
 
 ---
 
@@ -135,125 +239,328 @@ Interactive API docs are available at `/docs` once the server is running.
 
 ### ✅ Prerequisites
 
-- **Python** 3.10+
+Make sure you have:
+
+- **Python 3.10+**
 - **pip**
+- **Git**
+
+---
 
 ### ⚙️ Installation
 
-**1. Clone the repository**
+#### 1. Clone the repository
 
 ```bash
 git clone https://github.com/MUKULSAINI-76059/REGEN.git
 cd REGEN
 ```
 
-**2. Create a virtual environment (recommended)**
+---
+
+#### 2. Create a virtual environment
 
 ```bash
 python -m venv venv
-source venv/bin/activate      # Windows: venv\Scripts\activate
 ```
 
-**3. Install dependencies**
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+#### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**4. Run the server**
+---
+
+#### 4. Run the FastAPI server
 
 ```bash
 python main.py
 ```
 
-Models are trained once at startup. The server picks the first free port starting from `8000`, and prints the URL in the terminal:
+The application starts the model pipeline and launches the FastAPI server.
 
-```
+You should see something similar to:
+
+```text
 Starting REGEN-AI API on http://localhost:8000
 ```
 
-**5. Open in your browser**
+---
 
-```
+#### 5. Open the application
+
+Open:
+
+```text
 http://localhost:8000
 ```
 
 ---
 
+### 📚 API Documentation
+
+FastAPI automatically provides interactive API documentation.
+
+Open:
+
+```text
+http://localhost:8000/docs
+```
+
+---
 
 ## 📸 Screenshots
 
-| Home Page |
-|---|
-<img width="1852" height="889" alt="Home Page" src=""C:\Users\HP\Pictures\Screenshots\Screenshot 2026-10-01 010918.png"" />
+### 🏠 Home Page
 
-| Dashboard |
-|---|
-<img width="1894" height="876" alt="Dashboard" src="YOUR_IMAGE_LINK" />
+<img width="1852" height="889" alt="Home Page" src="./frontend/Page%20img/home%20page.png" />
 
-| Supports |
-|---|
-<img width="1898" height="886" alt="Supports" src="YOUR_IMAGE_LINK" />
+---
 
-| Verification |
-|---|
-<img width="1898" height="886" alt="Verification" src="YOUR_IMAGE_LINK" />
+### 📊 Dashboard
 
+<img width="1894" height="876" alt="Dashboard" src="./frontend/Page%20img/Dashboard%20Page.png" />
+
+---
+
+### ✅ Verification
+
+<img width="1898" height="886" alt="Verification" src="./frontend/Page%20img/Verification%20Page.png" />
+
+---
+
+## 📈 Verification
+
+REGEN-AI provides a dedicated verification dashboard to compare:
+
+- Raw NWP forecast
+- AI-corrected forecast
+- RMSE
+- MAE
+- Bias
+- Reliability
+- Prediction interval coverage
+
+The verification module helps analyse how the corrected rainfall forecast behaves compared with the original forecast.
+
+---
+
+## 🧭 Weather Regimes
+
+REGEN-AI classifies each grid point into one of four weather regimes:
+
+| Regime | Description |
+| --- | --- |
+| ☀️ **Active** | Active monsoon rainfall conditions |
+| 🌤️ **Break** | Relatively suppressed rainfall conditions |
+| 🌀 **Low Pressure** | Rainfall influenced by low-pressure systems |
+| ⛰️ **Orographic** | Rainfall influenced by terrain/elevation |
+
+The model does not use one single correction model for every weather situation. Instead, the regime probabilities are used to combine specialised regime-wise experts.
+
+---
+
+## 🎯 AI Correction Pipeline
+
+The core correction follows:
+
+```text
+NWP Rainfall
+     │
+     ▼
+Weather Regime Detection
+     │
+     ├──────────────┐
+     │              │
+     ▼              ▼
+Active Expert   Break Expert
+     │              │
+     ├──────────────┤
+     │              │
+     ▼              ▼
+Low Pressure    Orographic
+   Expert          Expert
+     │              │
+     └───────┬──────┘
+             ▼
+   Probability Weighted
+        Combination
+             │
+             ▼
+      Corrected Rainfall
+```
+
+---
+
+## ⛈️ Heavy Rain Detection
+
+The system also estimates probabilities for different rainfall severity levels.
+
+| Category | Threshold |
+| --- | ---: |
+| **Heavy Rain** | 64.5 mm |
+| **Very Heavy Rain** | 115.6 mm |
+| **Extremely Heavy Rain** | 204.5 mm |
+
+These probabilities can be used to identify areas that may experience significant rainfall.
+
+---
+
+## 📏 Uncertainty Estimation
+
+REGEN-AI does not provide only a single rainfall value.
+
+It also generates an uncertainty interval using:
+
+```text
+q10 → Lower rainfall estimate
+q50 → Main forecast
+q90 → Upper rainfall estimate
+```
+
+This gives the user an indication of the range around the predicted rainfall.
+
+---
+
+## 🔍 Explainability
+
+The system uses **SHAP** to explain individual predictions.
+
+For a selected grid point, the system can show which input features contributed to the rainfall forecast.
+
+Example features:
+
+```text
+NWP Rainfall
+Past Rainfall
+CAPE
+Precipitable Water
+MSLP
+850 hPa Wind
+Elevation
+Latitude
+Longitude
+```
+
+---
+
+## 🗺️ Spatial Correction
+
+Rainfall prediction is not only about the amount of rainfall.
+
+It is also important to estimate **where rainfall occurs**.
+
+The `spatial.py` module performs post-processing to improve the spatial placement of predicted rainfall across the grid.
+
+---
+
+## 🏘️ District-Level Forecast
+
+Grid-level predictions are aggregated to provide district-level rainfall information.
+
+The system uses an area-weighted aggregation approach to calculate rainfall for supported districts.
+
+---
 
 ## 🔭 Future Scope
 
-- Replace mock data with real NWP forecasts and IMD gridded observations
-- Real district boundaries (shapefiles) instead of the 2×2 grid blocks
-- Extend to more lead times and ensemble members
-- Deploy as a scheduled, operational forecasting service
+- Replace synthetic data with real NWP forecasts
+- Integrate real IMD gridded rainfall observations
+- Use real district boundaries and shapefiles
+- Increase the number of forecast lead times
+- Support ensemble forecasting
+- Improve uncertainty calibration
+- Add more weather regimes
+- Deploy as an operational forecasting service
+- Add automated scheduled forecasts
+- Improve real-time monitoring and alerts
 
 ---
 
 ## 🤝 Contributing
 
+Contributions are welcome! 🙌
+
+### Fork the repository
+
 ```bash
-# Fork → Create branch → Commit → Push → Open a PR
+git fork
+```
+
+### Create a new branch
+
+```bash
 git checkout -b feature/AmazingFeature
+```
+
+### Commit your changes
+
+```bash
+git add .
 git commit -m "Add: AmazingFeature"
+```
+
+### Push your branch
+
+```bash
 git push origin feature/AmazingFeature
 ```
+
+Then open a Pull Request.
 
 ---
 
 ## 📜 License
 
-Distributed under the **MIT License**. See `LICENSE` for more information.
+Distributed under the **MIT License**.
+
+See the `LICENSE` file for more information.
 
 ---
 
 ## 👨‍💻 Authors
- 
+
 <div align="center">
- 
-**Mukul Saini**
- 
+
+### Mukul Saini
+
 [![GitHub](https://img.shields.io/badge/GitHub-MUKULSAINI--76059-181717?style=for-the-badge&logo=github)](https://github.com/MUKULSAINI-76059)
- 
+
 <br/>
- 
-**Omkar Pandey**
- 
+
+### Omkar Pandey
+
 [![GitHub](https://img.shields.io/badge/GitHub-panditomkarpandey-181717?style=for-the-badge&logo=github)](https://github.com/panditomkarpandey)
- 
+
 </div>
- 
+
 ---
 
-
-
 <div align="center">
- 
+
 ### 🌾 *Better rainfall forecasts for a monsoon-dependent nation* 🌾
- 
+
 <br/>
- 
-⭐ **Star this repo** if you found it helpful — it means a lot!
- 
+
+⭐ **Star this repository if you found it helpful!**
+
+<br/>
+
 <img src="https://capsule-render.vercel.app/api?type=waving&color=3B82F6&height=100&section=footer" />
- 
+
 </div>
