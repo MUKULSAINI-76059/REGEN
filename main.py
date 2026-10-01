@@ -3,6 +3,7 @@ import socket
 import numpy as np, pandas as pd, plotly
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -42,6 +43,10 @@ def day_frame(day):
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.head("/health")
+def health_head():
+    return Response(status_code=200)
 
 
 @app.get("/api/forecast")
