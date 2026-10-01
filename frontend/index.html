@@ -34,7 +34,7 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 .main{display:grid;grid-template-columns:230px 1fr;gap:18px}
 .side{background:#fff;border-radius:18px;padding:16px;height:fit-content;position:sticky;top:110px;box-shadow:0 6px 18px rgba(100,181,246,.14)}
 .side h4{margin:14px 0 8px}.side label{display:block;margin:6px 0;cursor:pointer}.side input[type=range]{width:100%}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:16px}#list{scroll-margin-top:120px}
 .card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.07);cursor:pointer;transition:.25s;min-width:215px;display:flex;flex-direction:column}
 .card:hover{transform:translateY(-5px);box-shadow:0 14px 28px rgba(100,181,246,.3)}
 .img{height:110px;display:grid;place-items:center;font-size:44px;position:relative}
@@ -63,7 +63,7 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 <select id="day"></select></div>
 <div class="sub" id="sub"></div>
 <div class="wrap" id="home">
-<div class="hero"><div class="banner"><div><h1>Today's monsoon rain,<br>made more correct.</h1><p>We check the weather model, find the monsoon type, ask 4 experts and mix their answers.</p><button class="btn" onclick="go('list')">Shop all districts →</button></div><div class="mapbox" id="map"></div></div>
+<div class="hero"><div class="banner"><div><h1>Today's monsoon rain,<br>made more correct.</h1><p>We check the weather model, find the monsoon type, ask 4 experts and mix their answers.</p><button class="btn" onclick="go('list')">Show all districts →</button></div><div class="mapbox" id="map"></div></div>
 <div class="tiles"><div class="tile" style="background:linear-gradient(135deg,#fff,var(--g))"><h3>🎯 Error reduced</h3><div class="big" id="k1">–</div><div class="mu" id="k1s"></div></div>
 <div class="tile" style="background:linear-gradient(135deg,#fff,var(--o))"><h3>⚠️ Heavy rain alerts</h3><div class="big" id="k2">–</div><div class="mu">districts above 50% chance of &gt; 64.5 mm</div></div>
 <div class="tile" style="background:linear-gradient(135deg,#fff,var(--b))"><h3>🛡️ Trust score</h3><div class="big" id="k3">–</div><div class="mu">real rain stayed inside our 90% range</div></div></div></div>
@@ -73,7 +73,7 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 <h4>Monsoon type</h4><div id="regs"></div><h4>Minimum rain: <span id="minv">0</span> mm</h4><input type="range" id="min" min="0" max="150" value="0">
 <label><input type="checkbox" id="hv"> Only heavy rain alerts</label></aside><div><div class="mu" id="cnt" style="margin-bottom:8px"></div><div class="grid" id="cards"></div></div></div></div>
 <div class="wrap" id="ver" style="display:none"><h2>✅ Verification</h2><div class="kp" id="vk"></div><div class="cols" style="margin-top:16px"><div class="tile" id="vb"></div><div class="tile" id="vr"></div></div></div>
-<div class="top" onclick="scrollTo({top:0,behavior:'smooth'})">↑ Back to top</div><div class="foot">REGEN-AI · Mock data demo · Built with FastAPI, XGBoost, LightGBM &amp; SHAP</div>
+<div class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</div><div class="foot">© 2026 REGEN · All Rights Reserved</div>
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
 <div class="server-status" id="serverStatus" role="status" aria-live="polite"><div class="server-status-card"><div class="server-spinner" id="serverSpinner" aria-hidden="true"></div><h2 id="serverStatusTitle">Please wait...</h2><p id="serverStatusMessage">Our server is waking up. This may take a few seconds.</p><button class="btn server-retry" id="serverRetry" hidden>Try again</button></div></div>
 <script>
@@ -152,7 +152,7 @@ async function startApplication(){
     });
     $("#sub").innerHTML = subItems.join("") + '<a onclick="showVer()">✅ Verification</a>';
     $("#regs").innerHTML=["All",...RG].map(r=>`<label><input type="radio" name="rg" ${r=="All"?"checked":""} onchange="setReg('${r}')"> ${r}</label>`).join("");
-  $("#q").oninput=e=>{S.q=e.target.value.toLowerCase();render()};$("#sort").onchange=e=>{S.sort=e.target.value;render()};$("#hv").onchange=e=>{S.hv=e.target.checked;render()};
+  $("#q").oninput=e=>{S.q=e.target.value.toLowerCase();render()};$("#q").onkeydown=e=>{if(e.key==="Enter")$("#list").scrollIntoView({behavior:"smooth",block:"start"})};$("#sort").onchange=e=>{S.sort=e.target.value;render()};$("#hv").onchange=e=>{S.hv=e.target.checked;render()};
   $("#min").oninput=e=>{S.min=+e.target.value;$("#minv").textContent=S.min;render()};$("#day").onchange=async e=>{S.day=+e.target.value;S.f=await api("/api/forecast?day="+S.day);render()};
   $("#ov").onclick=e=>{if(e.target.id=="ov")$("#ov").classList.remove("on")};S.f=forecast;render();setServerStatus("hidden");
  }catch(error){setServerStatus("error")}

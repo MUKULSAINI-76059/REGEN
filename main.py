@@ -39,6 +39,11 @@ def day_frame(day):
     return d
 
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 @app.get("/api/forecast")
 def forecast(day: int = 0):
     d = day_frame(day)
