@@ -155,7 +155,11 @@ async function startApplication(){
   $("#q").oninput=e=>{S.q=e.target.value.toLowerCase();render()};$("#q").onkeydown=e=>{if(e.key==="Enter")$("#list").scrollIntoView({behavior:"smooth",block:"start"})};$("#sort").onchange=e=>{S.sort=e.target.value;render()};$("#hv").onchange=e=>{S.hv=e.target.checked;render()};
   $("#min").oninput=e=>{S.min=+e.target.value;$("#minv").textContent=S.min;render()};$("#day").onchange=async e=>{S.day=+e.target.value;S.f=await api("/api/forecast?day="+S.day);render()};
   $("#ov").onclick=e=>{if(e.target.id=="ov")$("#ov").classList.remove("on")};S.f=forecast;render();setServerStatus("hidden");
- }catch(error){setServerStatus("error")}
+ }catch(error){
+ console.error("STARTUP ERROR:", error);
+  console.error("ERROR MESSAGE:", error.message);
+ setServerStatus("error");
+}
 }
 $("#serverRetry").onclick=startApplication;
 startApplication();
