@@ -75,16 +75,18 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 <div class="wrap" id="ver" style="display:none"><h2>✅ Verification</h2><div class="kp" id="vk"></div><div class="cols" style="margin-top:16px"><div class="tile" id="vb"></div><div class="tile" id="vr"></div></div></div>
 <div class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</div><div class="foot">© 2026 REGEN · All Rights Reserved</div>
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
-<div class="server-status" id="serverStatus" role="status" aria-live="polite"><div class="server-status-card"><div class="server-spinner" id="serverSpinner" aria-hidden="true"></div><h2 id="serverStatusTitle">Please wait...</h2><p id="serverStatusMessage">Our server is waking up. This may take a few seconds.</p><button class="btn server-retry" id="serverRetry" hidden>Try again</button></div></div>
+<div class="server-status" id="serverStatus" role="status" aria-live="polite" hidden><div class="server-status-card"><div class="server-spinner" id="serverSpinner" aria-hidden="true"></div><h2 id="serverStatusTitle">Please wait...</h2><p id="serverStatusMessage">Our server is waking up. This may take a few seconds.</p><button class="btn server-retry" id="serverRetry" hidden>Try again</button></div></div>
 <script>
 const API = "https://regen-525q.onrender.com";
 
 const $=s=>document.querySelector(s),
 api=u=>fetch(API + u).then(r=>{if(!r.ok) throw new Error(`Request failed (${r.status})`);return r.json()})
 const STARTUP_TIMEOUT=120000;
+let startupNoticeTimer;
 function setServerStatus(state){
  const box=$("#serverStatus"),spinner=$("#serverSpinner"),title=$("#serverStatusTitle"),message=$("#serverStatusMessage"),retry=$("#serverRetry");
- box.hidden=state==="hidden"; retry.hidden=state!=="error"; spinner.hidden=state==="error";
+ clearTimeout(startupNoticeTimer); retry.hidden=state!=="error"; spinner.hidden=state==="error";
+ if(state==="loading"){box.hidden=true;startupNoticeTimer=setTimeout(()=>{box.hidden=false},3000)}else{box.hidden=state==="hidden"}
  if(state==="loading"){title.textContent="Please wait...";message.textContent="Our server is waking up. This may take a few seconds.";message.classList.remove("server-error")}
  if(state==="error"){title.textContent="Unable to load the forecast";message.textContent="The server is taking longer than usual. Please try again.";message.classList.add("server-error")}
 }
@@ -154,7 +156,7 @@ async function startApplication(){
     $("#regs").innerHTML=["All",...RG].map(r=>`<label><input type="radio" name="rg" ${r=="All"?"checked":""} onchange="setReg('${r}')"> ${r}</label>`).join("");
   $("#q").oninput=e=>{S.q=e.target.value.toLowerCase();render()};$("#q").onkeydown=e=>{if(e.key==="Enter")$("#list").scrollIntoView({behavior:"smooth",block:"start"})};$("#sort").onchange=e=>{S.sort=e.target.value;render()};$("#hv").onchange=e=>{S.hv=e.target.checked;render()};
   $("#min").oninput=e=>{S.min=+e.target.value;$("#minv").textContent=S.min;render()};$("#day").onchange=async e=>{S.day=+e.target.value;S.f=await api("/api/forecast?day="+S.day);render()};
-  $("#ov").onclick=e=>{if(e.target.id=="ov")$("#ov").classList.remove("on")};S.f=forecast;render();setServerStatus("hidden");
+  $("#ov").onclick=e=>{if(e.target.id=="ov")$("#ov").classList.remove("on")};S.f=forecast;render(); console.log("STARTUP SUCCESS");setServerStatus("hidden");
  }catch(error){
  console.error("STARTUP ERROR:", error);
   console.error("ERROR MESSAGE:", error.message);
