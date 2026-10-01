@@ -101,6 +101,39 @@ Raw NWP + atmospheric features
 
 ---
 
+---
+
+## 🚀 Deployment & Backend Monitoring
+
+REGEN-AI uses a separate deployment setup for its frontend and backend:
+
+| Component | Platform |
+|---|---|
+| 🌐 Frontend | Netlify |
+| ⚡ Backend API | Render |
+| 📡 Monitoring | UptimeRobot |
+
+### 📡 Backend Monitoring with UptimeRobot
+
+The REGEN-AI backend is deployed on Render. Since the backend runs on a cloud service, it may become inactive after a period of no incoming requests on supported free-tier configurations.
+
+To monitor backend availability, **UptimeRobot** is configured to periodically send an HTTP request to the backend's `/health` endpoint.
+
+```text
+UptimeRobot
+     │
+     │ Periodic HTTP Request
+     ▼
+/health endpoint
+     │
+     ▼
+REGEN-AI Backend
+     │
+     ▼
+   HTTP 200
+```
+---
+
 ## 📁 Project Structure
 
 ```text
