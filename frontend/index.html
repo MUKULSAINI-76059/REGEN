@@ -75,7 +75,7 @@ h2{font-size:20px;margin:26px 0 12px}.row{display:flex;gap:14px;overflow:auto;pa
 <div class="wrap" id="ver" style="display:none"><h2>✅ Verification</h2><div class="kp" id="vk"></div><div class="cols" style="margin-top:16px"><div class="tile" id="vb"></div><div class="tile" id="vr"></div></div></div>
 <div class="top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</div><div class="foot">© 2026 REGEN · All Rights Reserved</div>
 <div class="ov" id="ov"><div class="modal" id="md"></div></div>
-<div class="server-status" id="serverStatus" role="status" aria-live="polite" hidden><div class="server-status-card"><div class="server-spinner" id="serverSpinner" aria-hidden="true"></div><h2 id="serverStatusTitle">Please wait...</h2><p id="serverStatusMessage">Our server is waking up. This may take a few seconds.</p><button class="btn server-retry" id="serverRetry" hidden>Try again</button></div></div>
+<div class="server-status" id="serverStatus" role="status" aria-live="polite" hidden><div class="server-status-card"><div class="server-spinner" id="serverSpinner" aria-hidden="true"></div><h2 id="serverStatusTitle">Please wait...</h2><p id="serverStatusMessage">Loading the latest forecast. This may take a few seconds.</p><button class="btn server-retry" id="serverRetry" hidden>Try again</button></div></div>
 <script>
 const API = "https://regen-525q.onrender.com";
 
@@ -87,7 +87,7 @@ function setServerStatus(state){
  const box=$("#serverStatus"),spinner=$("#serverSpinner"),title=$("#serverStatusTitle"),message=$("#serverStatusMessage"),retry=$("#serverRetry");
  clearTimeout(startupNoticeTimer); retry.hidden=state!=="error"; spinner.hidden=state==="error";
  if(state==="loading"){box.hidden=true;startupNoticeTimer=setTimeout(()=>{box.hidden=false},3000)}else{box.hidden=state==="hidden"}
- if(state==="loading"){title.textContent="Please wait...";message.textContent="Our server is waking up. This may take a few seconds.";message.classList.remove("server-error")}
+ if(state==="loading"){title.textContent="Please wait...";message.textContent="Loading the latest forecast. This may take a few seconds.";message.classList.remove("server-error")}
  if(state==="error"){title.textContent="Unable to load the forecast";message.textContent="The server is taking longer than usual. Please try again.";message.classList.add("server-error")}
 }
 function startupRequest(url){return Promise.race([api(url),new Promise((_,reject)=>setTimeout(()=>reject(new Error("startup timeout")),STARTUP_TIMEOUT))])}
